@@ -14,7 +14,7 @@ class Home extends React.Component {
         showSplash: true
     }
 
-    UNSAFE_componentWillMount() {
+    componentDidMount() {
         setTimeout(() => {
             this.setState({ showSplash: false });
         }, 4000);

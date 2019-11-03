@@ -10,13 +10,13 @@ import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 const CHATKIT_TOKEN_PROVIDER_ENDPOINT = 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/0d063e73-977b-424a-8ab2-d97c8b9c7907/token';
 const CHATKIT_INSTANCE_LOCATOR = 'v1:us1:0d063e73-977b-424a-8ab2-d97c8b9c7907';
 const CHATKIT_ROOM_ID = '3ad8e3ce-6378-4002-8e31-98e426e897aa';
-const CHATKIT_USER_NAME = 'jagruteebanda234';
 
 const { width, height } = Dimensions.get('window');
 
 export default class Chat extends React.Component {
     state = {
-        messages: []
+        messages: [],
+        userId: this.props.navigation.getParam('userId')
     };
 
     componentDidMount() {
@@ -26,7 +26,7 @@ export default class Chat extends React.Component {
 
         const chatManager = new ChatManager({
             instanceLocator: CHATKIT_INSTANCE_LOCATOR,
-            userId: CHATKIT_USER_NAME,
+            userId: this.state.userId,
             tokenProvider: tokenProvider,
         });
 
@@ -44,6 +44,35 @@ export default class Chat extends React.Component {
             .catch(err => {
                 console.log(err);
             });
+    }
+
+    componentWillUnmount = () => {
+        this.state.messages.map((message) => {
+            fetch('https://agile-castle-32538.herokuapp.com/apis/room/flushroom', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    roomId: CHATKIT_ROOM_ID
+                }),
+            }).then((response) => {
+                return response.json();
+            }).then((responseJson) => {
+                switch (responseJson.code) {
+                    case 200: {
+                        console.log('Flushed successfully');
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                }
+            }).catch((error) => {
+                console.log('Error:: ', error)
+            });
+        });
     }
 
     onReceive = data => {
@@ -82,7 +111,7 @@ export default class Chat extends React.Component {
     render() {
         return <GiftedChat messages={this.state.messages} onSend={messages => this.onSend(messages)}
             user={{
-                _id: CHATKIT_USER_NAME
+                _id: this.state.userId
             }} />;
     }
 }

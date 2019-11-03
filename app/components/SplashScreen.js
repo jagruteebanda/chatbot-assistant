@@ -9,6 +9,13 @@ import {
 const { width, height } = Dimensions.get('window');
 
 class SplashScreen extends Component {
+
+    componentDidMount = () => {
+        setTimeout(() => {
+            this.props.navigation.navigate('Login');
+        }, 4 * 1000);
+    }
+
     render() {
         return (
             <View style={{ flex: 1, width, height, backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center' }}>

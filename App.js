@@ -11,13 +11,25 @@ import {
 	createDrawerNavigator,
 } from 'react-navigation-drawer';
 
-import Home from './app/components/Home';
+import SplashScreen from './app/components/SplashScreen';
+import Login from './app/components/Login';
+// import Home from './app/components/Home';
+import Chat from './app/components/Chat';
 
 const DRAWER_WIDTH = Dimensions.get('window').width * 0.83;
 
 const RouteConfigs = {
-	Home: {
-		screen: Home
+	SplashScreen: {
+		screen: SplashScreen
+	},
+	Login: {
+		screen: Login
+	},
+	// Home: {
+	// 	screen: Home
+	// },
+	Chat: {
+		screen: Chat
 	}
 };
 
